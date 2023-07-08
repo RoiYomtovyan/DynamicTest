@@ -5,12 +5,22 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.*;
+
+import org.openqa.selenium.devtools.v114.network.Network;
+import org.openqa.selenium.devtools.v114.network.model.Request;
+import org.openqa.selenium.devtools.v114.network.model.Response;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebDriver;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 public class SanityTests {
@@ -34,13 +44,27 @@ public class SanityTests {
     }
 
     static JSONObject config = (JSONObject) file;
+    static List<ResponseData> responses = new ArrayList<>();
 
     @BeforeClass
     public static void start() throws Exception {
         System.setProperty(config.get("driverType").toString(), config.get("driverLocation").toString());
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
+        options.setExperimentalOption("w3c", true);
         driver = new ChromeDriver(options);
+        DevTools devTools = ((ChromeDriver) driver).getDevTools();
+        devTools.createSession();
+        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+
+
+
+        devTools.addListener(Network.responseReceived(), event -> {
+            Response response = event.getResponse();
+            String url = response.getUrl();
+            int statusCode = response.getStatus();
+            responses.add(new ResponseData(url, statusCode));
+        });
 
         // this code block is trying to open the web page
         boolean pageOpened = false;
@@ -66,6 +90,14 @@ public class SanityTests {
         mainPage.setEmail("roiyomtovyan@gmail.com");
         mainPage.setPassword("123456");
         mainPage.submitButtonClick();
+        for (ResponseData responseData : responses) {
+            if (responseData.getUrl().equals("https://murmuring-ravine-01051.herokuapp.com/api/users/me")) {
+                int statusCode = responseData.getStatusCode();
+                // Assert the status code
+                assert statusCode == 404 : "Expected status code 404 but found " + statusCode;
+            }
+        }
+
 
     }
 
