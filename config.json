@@ -1,0 +1,5 @@
+{
+    "driverType": "webdriver.chrome.driver",
+    "driverLocation": "chromedriver.exe",
+    "url": "https://cocktailale.web.app/getStarted"
+}
