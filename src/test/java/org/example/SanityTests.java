@@ -7,8 +7,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 import java.io.FileReader;
@@ -21,7 +19,6 @@ public class SanityTests {
     Actions action = new Actions(driver);
 
     MainPage mainPage= new MainPage(driver);
-    WebDriverWait wait = new WebDriverWait(driver, 30);
 
     // this will allow us to read the test configuration from a file
     static Object file;
@@ -42,6 +39,7 @@ public class SanityTests {
     public static void start() throws Exception {
         System.setProperty(config.get("driverType").toString(), config.get("driverLocation").toString());
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
 
         // this code block is trying to open the web page
