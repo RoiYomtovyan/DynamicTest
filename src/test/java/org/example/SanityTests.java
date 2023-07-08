@@ -19,6 +19,8 @@ public class SanityTests {
 
     public static WebDriver driver;
     Actions action = new Actions(driver);
+
+    MainPage mainPage= new MainPage(driver);
     WebDriverWait wait = new WebDriverWait(driver, 30);
 
     // this will allow us to read the test configuration from a file
@@ -42,7 +44,7 @@ public class SanityTests {
         ChromeOptions options = new ChromeOptions();
         driver = new ChromeDriver(options);
 
-        // this code block is tring to open the web page
+        // this code block is trying to open the web page
         boolean pageOpened = false;
         try {
             driver.navigate().to(config.get("url").toString());
@@ -63,12 +65,9 @@ public class SanityTests {
 
     @Test
     public void SanityTest01_insert_non_valid_user_data() {
-        wait.until(ExpectedConditions.titleIs("CocktaiLale"));
-        MainPage.emailField(driver).click();
-        MainPage.emailField(driver).sendKeys("roiyomtovyan@gmail.com");
-        MainPage.passwordField(driver).click();
-        MainPage.passwordField(driver).sendKeys("123456");
-        MainPage.submitButton(driver).click();
+        mainPage.setEmail("roiyomtovyan@gmail.com");
+        mainPage.setPassword("123456");
+        mainPage.submitButtonClick();
 
     }
 
