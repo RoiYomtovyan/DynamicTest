@@ -17,5 +17,4 @@ public class ResponseData {
     public int getStatusCode() {
         return statusCode;
     }
-
 }

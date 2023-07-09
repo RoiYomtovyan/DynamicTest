@@ -57,8 +57,6 @@ public class SanityTests {
         devTools.createSession();
         devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
 
-
-
         devTools.addListener(Network.responseReceived(), event -> {
             Response response = event.getResponse();
             String url = response.getUrl();
@@ -87,18 +85,16 @@ public class SanityTests {
 
     @Test
     public void SanityTest01_insert_non_valid_user_data() {
-        mainPage.setEmail("roiyomtovyan@gmail.com");
-        mainPage.setPassword("123456");
+        mainPage.setEmail(config.get("userName").toString());
+        mainPage.setPassword(config.get("password").toString());
         mainPage.submitButtonClick();
         for (ResponseData responseData : responses) {
-            if (responseData.getUrl().equals("https://murmuring-ravine-01051.herokuapp.com/api/users/me")) {
+            if (responseData.getUrl().equals(config.get("urlForTest").toString())) {
                 int statusCode = responseData.getStatusCode();
                 // Assert the status code
-                assert statusCode == 404 : "Expected status code 404 but found " + statusCode;
+                assert statusCode == config.get("statusCode_404").hashCode() : "Expected status code 404 but found " + statusCode;
             }
         }
-
-
     }
 
 

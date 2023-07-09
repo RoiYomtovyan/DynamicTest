@@ -1,5 +1,9 @@
 {
     "driverType": "webdriver.chrome.driver",
     "driverLocation": "chromedriver.exe",
-    "url": "https://cocktailale.web.app/getStarted"
+    "url": "https://cocktailale.web.app/getStarted",
+    "userName": "roiyomtovyan@gmail.com",
+    "password": "123456",
+    "urlForTest": "https://murmuring-ravine-01051.herokuapp.com/api/users/me",
+    "statusCode_404": "404"
 }
